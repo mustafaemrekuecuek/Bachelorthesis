@@ -1,0 +1,120 @@
+BASE: ['']
+TOOLBOX_MODE: "train_and_test"
+
+TRAIN:
+  BATCH_SIZE: 4
+  EPOCHS: 30
+  LR: 9e-3
+  MODEL_FILE_NAME: UBFC_UBFC_DeepPhys_Baseline
+  PLOT_LOSSES_AND_LR: True
+  DATA:
+    FS: 30
+    DATASET: UBFC-rPPG
+    DO_PREPROCESS: True
+    DATA_FORMAT: NDCHW
+    DATA_PATH: "/Volumes/Intenso/UBFC-rPPG"
+    CACHED_PATH: "./cache/ubfc_train"
+    FILE_LIST_PATH: "./data/file_lists"
+    EXP_DATA_NAME: ""
+    BEGIN: 0.0
+    END: 0.7
+    PREPROCESS:
+      DATA_TYPE: ['DiffNormalized', 'Standardized']
+      DATA_AUG: ['None']
+      LABEL_TYPE: DiffNormalized
+      DO_CHUNK: True
+      CHUNK_LENGTH: 180
+      CROP_FACE:
+        DO_CROP_FACE: True
+        BACKEND: 'HC'
+        USE_LARGE_FACE_BOX: True
+        LARGE_BOX_COEF: 1.5
+        DETECTION:
+          DO_DYNAMIC_DETECTION: False
+          DYNAMIC_DETECTION_FREQUENCY: 30
+          USE_MEDIAN_FACE_BOX: False
+      RESIZE:
+        H: 72
+        W: 72
+
+VALID:
+  DATA:
+    FS: 30
+    DATASET: UBFC-rPPG
+    DO_PREPROCESS: True
+    DATA_FORMAT: NDCHW
+    DATA_PATH: "/Volumes/Intenso/UBFC-rPPG"
+    CACHED_PATH: "./cache/ubfc_valid"
+    FILE_LIST_PATH: "./data/file_lists"
+    EXP_DATA_NAME: ""
+    BEGIN: 0.7
+    END: 0.85
+    PREPROCESS:
+      DATA_TYPE: ['DiffNormalized', 'Standardized']
+      DATA_AUG: ['None']
+      LABEL_TYPE: DiffNormalized
+      DO_CHUNK: True
+      CHUNK_LENGTH: 180
+      CROP_FACE:
+        DO_CROP_FACE: True
+        BACKEND: 'HC'
+        USE_LARGE_FACE_BOX: True
+        LARGE_BOX_COEF: 1.5
+        DETECTION:
+          DO_DYNAMIC_DETECTION: False
+          DYNAMIC_DETECTION_FREQUENCY: 30
+          USE_MEDIAN_FACE_BOX: False
+      RESIZE:
+        H: 72
+        W: 72
+
+TEST:
+  METRICS: ['MAE', 'RMSE', 'MAPE', 'Pearson', 'SNR', 'BA']
+  USE_LAST_EPOCH: True
+  DATA:
+    FS: 30
+    DATASET: UBFC-rPPG
+    DO_PREPROCESS: True
+    DATA_FORMAT: NDCHW
+    DATA_PATH: "/Volumes/Intenso/UBFC-rPPG"
+    CACHED_PATH: "./cache/ubfc_test"
+    FILE_LIST_PATH: "./data/file_lists"
+    EXP_DATA_NAME: ""
+    BEGIN: 0.85
+    END: 1.0
+    PREPROCESS:
+      DATA_TYPE: ['DiffNormalized', 'Standardized']
+      DATA_AUG: ['None']
+      LABEL_TYPE: DiffNormalized
+      DO_CHUNK: True
+      CHUNK_LENGTH: 180
+      CROP_FACE:
+        DO_CROP_FACE: True
+        BACKEND: 'HC'
+        USE_LARGE_FACE_BOX: True
+        LARGE_BOX_COEF: 1.5
+        DETECTION:
+          DO_DYNAMIC_DETECTION: False
+          DYNAMIC_DETECTION_FREQUENCY: 30
+          USE_MEDIAN_FACE_BOX: False
+      RESIZE:
+        H: 72
+        W: 72
+
+DEVICE: cpu
+NUM_OF_GPU_TRAIN: 0
+
+LOG:
+  PATH: runs/exp
+
+MODEL:
+  DROP_RATE: 0.2
+  NAME: DeepPhys
+
+INFERENCE:
+  BATCH_SIZE: 4
+  EVALUATION_METHOD: "FFT"
+  EVALUATION_WINDOW:
+    USE_SMALLER_WINDOW: False
+    WINDOW_SIZE: 10
+  MODEL_PATH: ""

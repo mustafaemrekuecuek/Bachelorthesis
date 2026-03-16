@@ -40,20 +40,12 @@ def add_args(parser):
     parser.add_argument('--config_file', required=False,
                         default="configs/train_configs/PURE_PURE_UBFC-rPPG_TSCAN_BASIC.yaml", type=str, help="The name of the model.")
     '''Neural Method Sample YAML LIST:
-      SCAMPS_SCAMPS_UBFC-rPPG_TSCAN_BASIC.yaml
-      SCAMPS_SCAMPS_UBFC-rPPG_DEEPPHYS_BASIC.yaml
-      SCAMPS_SCAMPS_UBFC-rPPG_PHYSNET_BASIC.yaml
-      SCAMPS_SCAMPS_PURE_DEEPPHYS_BASIC.yaml
-      SCAMPS_SCAMPS_PURE_TSCAN_BASIC.yaml
-      SCAMPS_SCAMPS_PURE_PHYSNET_BASIC.yaml
       PURE_PURE_UBFC-rPPG_TSCAN_BASIC.yaml
       PURE_PURE_UBFC-rPPG_DEEPPHYS_BASIC.yaml
       PURE_PURE_UBFC-rPPG_PHYSNET_BASIC.yaml
-      PURE_PURE_MMPD_TSCAN_BASIC.yaml
       UBFC-rPPG_UBFC-rPPG_PURE_TSCAN_BASIC.yaml
       UBFC-rPPG_UBFC-rPPG_PURE_DEEPPHYS_BASIC.yaml
       UBFC-rPPG_UBFC-rPPG_PURE_PHYSNET_BASIC.yaml
-      MMPD_MMPD_UBFC-rPPG_TSCAN_BASIC.yaml
     Unsupervised Method Sample YAML LIST:
       PURE_UNSUPERVISED.yaml
       UBFC-rPPG_UNSUPERVISED.yaml
@@ -158,24 +150,6 @@ if __name__ == "__main__":
             train_loader = data_loader.UBFCrPPGLoader.UBFCrPPGLoader
         elif config.TRAIN.DATA.DATASET == "PURE":
             train_loader = data_loader.PURELoader.PURELoader
-        elif config.TRAIN.DATA.DATASET == "SCAMPS":
-            train_loader = data_loader.SCAMPSLoader.SCAMPSLoader
-        elif config.TRAIN.DATA.DATASET == "MMPD":
-            train_loader = data_loader.MMPDLoader.MMPDLoader
-        elif config.TRAIN.DATA.DATASET == "BP4DPlus":
-            train_loader = data_loader.BP4DPlusLoader.BP4DPlusLoader
-        elif config.TRAIN.DATA.DATASET == "BP4DPlusBigSmall":
-            train_loader = data_loader.BP4DPlusBigSmallLoader.BP4DPlusBigSmallLoader
-        elif config.TRAIN.DATA.DATASET == "UBFC-PHYS":
-            train_loader = data_loader.UBFCPHYSLoader.UBFCPHYSLoader
-        elif config.TRAIN.DATA.DATASET == "iBVP":
-            train_loader = data_loader.iBVPLoader.iBVPLoader
-        elif config.TRAIN.DATA.DATASET == "PhysDrive":
-            train_loader = data_loader.PhysDriveLoader.PhysDriveLoader
-        elif config.TRAIN.DATA.DATASET == "LADH":
-            train_loader = data_loader.LADHLoader.LADHLoader
-        elif config.TRAIN.DATA.DATASET == "SUMS":
-            train_loader = data_loader.SUMSLoader.SUMSLoader
         else:
             raise ValueError("Unsupported dataset! Currently supporting UBFC-rPPG, PURE, MMPD, \
                              SCAMPS, BP4D+ (Normal and BigSmall preprocessing), UBFC-PHYS and iBVP.")
@@ -205,24 +179,6 @@ if __name__ == "__main__":
             valid_loader = data_loader.UBFCrPPGLoader.UBFCrPPGLoader
         elif config.VALID.DATA.DATASET == "PURE":
             valid_loader = data_loader.PURELoader.PURELoader
-        elif config.VALID.DATA.DATASET == "SCAMPS":
-            valid_loader = data_loader.SCAMPSLoader.SCAMPSLoader
-        elif config.VALID.DATA.DATASET == "MMPD":
-            valid_loader = data_loader.MMPDLoader.MMPDLoader
-        elif config.VALID.DATA.DATASET == "BP4DPlus":
-            valid_loader = data_loader.BP4DPlusLoader.BP4DPlusLoader
-        elif config.VALID.DATA.DATASET == "BP4DPlusBigSmall":
-            valid_loader = data_loader.BP4DPlusBigSmallLoader.BP4DPlusBigSmallLoader
-        elif config.VALID.DATA.DATASET == "UBFC-PHYS":
-            valid_loader = data_loader.UBFCPHYSLoader.UBFCPHYSLoader
-        elif config.VALID.DATA.DATASET == "iBVP":
-            valid_loader = data_loader.iBVPLoader.iBVPLoader
-        elif config.VALID.DATA.DATASET == "PhysDrive":
-            valid_loader = data_loader.PhysDriveLoader.PhysDriveLoader
-        elif config.VALID.DATA.DATASET == "LADH":
-            valid_loader = data_loader.LADHLoader.LADHLoader
-        elif config.VALID.DATA.DATASET == "SUMS":
-            valid_loader = data_loader.SUMSLoader.SUMSLoader
         elif config.VALID.DATA.DATASET is None and not config.TEST.USE_LAST_EPOCH:
             raise ValueError("Validation dataset not specified despite USE_LAST_EPOCH set to False!")
         else:
@@ -254,24 +210,6 @@ if __name__ == "__main__":
             test_loader = data_loader.UBFCrPPGLoader.UBFCrPPGLoader
         elif config.TEST.DATA.DATASET == "PURE":
             test_loader = data_loader.PURELoader.PURELoader
-        elif config.TEST.DATA.DATASET == "SCAMPS":
-            test_loader = data_loader.SCAMPSLoader.SCAMPSLoader
-        elif config.TEST.DATA.DATASET == "MMPD":
-            test_loader = data_loader.MMPDLoader.MMPDLoader
-        elif config.TEST.DATA.DATASET == "BP4DPlus":
-            test_loader = data_loader.BP4DPlusLoader.BP4DPlusLoader
-        elif config.TEST.DATA.DATASET == "BP4DPlusBigSmall":
-            test_loader = data_loader.BP4DPlusBigSmallLoader.BP4DPlusBigSmallLoader
-        elif config.TEST.DATA.DATASET == "UBFC-PHYS":
-            test_loader = data_loader.UBFCPHYSLoader.UBFCPHYSLoader
-        elif config.TEST.DATA.DATASET == "iBVP":
-            test_loader = data_loader.iBVPLoader.iBVPLoader
-        elif config.TEST.DATA.DATASET == "PhysDrive":
-            test_loader = data_loader.PhysDriveLoader.PhysDriveLoader
-        elif config.TEST.DATA.DATASET == "LADH":
-            test_loader = data_loader.LADHLoader.LADHLoader
-        elif config.TEST.DATA.DATASET == "SUMS":
-            test_loader = data_loader.SUMSLoader.SUMSLoader
         else:
             raise ValueError("Unsupported dataset! Currently supporting UBFC-rPPG, PURE, MMPD, \
                              SCAMPS, BP4D+ (Normal and BigSmall preprocessing), UBFC-PHYS and iBVP.")
@@ -304,16 +242,6 @@ if __name__ == "__main__":
             unsupervised_loader = data_loader.UBFCrPPGLoader.UBFCrPPGLoader
         elif config.UNSUPERVISED.DATA.DATASET == "PURE":
             unsupervised_loader = data_loader.PURELoader.PURELoader
-        elif config.UNSUPERVISED.DATA.DATASET == "SCAMPS":
-            unsupervised_loader = data_loader.SCAMPSLoader.SCAMPSLoader
-        elif config.UNSUPERVISED.DATA.DATASET == "MMPD":
-            unsupervised_loader = data_loader.MMPDLoader.MMPDLoader
-        elif config.UNSUPERVISED.DATA.DATASET == "BP4DPlus":
-            unsupervised_loader = data_loader.BP4DPlusLoader.BP4DPlusLoader
-        elif config.UNSUPERVISED.DATA.DATASET == "UBFC-PHYS":
-            unsupervised_loader = data_loader.UBFCPHYSLoader.UBFCPHYSLoader
-        elif config.UNSUPERVISED.DATA.DATASET == "iBVP":
-            unsupervised_loader = data_loader.iBVPLoader.iBVPLoader
         else:
             raise ValueError("Unsupported dataset! Currently supporting UBFC-rPPG, PURE, MMPD, \
                              SCAMPS, BP4D+, UBFC-PHYS and iBVP.")
@@ -325,7 +253,7 @@ if __name__ == "__main__":
             device=config.DEVICE)
         data_loader_dict["unsupervised"] = DataLoader(
             dataset=unsupervised_data,
-            num_workers=16,
+            num_workers=8,
             batch_size=1,
             shuffle=False,
             worker_init_fn=seed_worker,
