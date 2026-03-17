@@ -12,7 +12,7 @@ TRAIN:
     DATASET: UBFC-rPPG
     DO_PREPROCESS: True
     DATA_FORMAT: NDCHW
-    DATA_PATH: "/Volumes/Intenso/UBFC-rPPG"
+    DATA_PATH: "/content/drive/MyDrive/UBFC-rPPG"
     CACHED_PATH: "./cache/ubfc_train"
     FILE_LIST_PATH: "./data/file_lists"
     EXP_DATA_NAME: ""
@@ -43,7 +43,7 @@ VALID:
     DATASET: UBFC-rPPG
     DO_PREPROCESS: True
     DATA_FORMAT: NDCHW
-    DATA_PATH: "/Volumes/Intenso/UBFC-rPPG"
+    DATA_PATH: "/content/drive/MyDrive/UBFC-rPPG"
     CACHED_PATH: "./cache/ubfc_valid"
     FILE_LIST_PATH: "./data/file_lists"
     EXP_DATA_NAME: ""
@@ -76,7 +76,7 @@ TEST:
     DATASET: UBFC-rPPG
     DO_PREPROCESS: True
     DATA_FORMAT: NDCHW
-    DATA_PATH: "/Volumes/Intenso/UBFC-rPPG"
+    DATA_PATH: "/content/drive/MyDrive/UBFC-rPPG"
     CACHED_PATH: "./cache/ubfc_test"
     FILE_LIST_PATH: "./data/file_lists"
     EXP_DATA_NAME: ""
@@ -101,8 +101,8 @@ TEST:
         H: 72
         W: 72
 
-DEVICE: cpu
-NUM_OF_GPU_TRAIN: 0
+DEVICE: cuda:0
+NUM_OF_GPU_TRAIN: 1
 
 LOG:
   PATH: runs/exp
