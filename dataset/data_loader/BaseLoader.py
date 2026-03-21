@@ -70,6 +70,11 @@ class BaseLoader(Dataset):
             from dataset.data_loader.face_detector.YOLO5Face import YOLO5Face
             if 'Y5F' in self.config_data.PREPROCESS.CROP_FACE.BACKEND:
                 self.Y5FObj = YOLO5Face(self.config_data.PREPROCESS.CROP_FACE.BACKEND, device)
+            if 'MP' in self.config_data.PREPROCESS.CROP_FACE.BACKEND:
+                self.mp_face = mp.solutions.face_detection.FaceDetection(
+                    model_selection=0,
+                    min_detection_confidence=0.5
+                )
 
         assert (config_data.BEGIN < config_data.END)
         assert (config_data.BEGIN > 0 or config_data.BEGIN == 0)
@@ -318,7 +323,55 @@ class BaseLoader(Dataset):
                 face_box_coor = face_zone[max_width_index]
                 print("Warning: More than one faces are detected. Only cropping the biggest one.")
             else:
-                face_box_coor = face_zone[0]     
+                face_box_coor = face_zone[0]
+
+        elif backend == "MP":
+            rgb_frame = cv2.cvtColor(frame[:, :, :3].astype(np.uint8), cv2.COLOR_BGR2RGB)
+            results = self.mp_face.process(rgb_frame)
+
+            if results.detections:
+                h, w, _ = frame.shape
+
+                # Größtes Gesicht wählen
+                best_box = None
+                best_area = -1
+
+                for detection in results.detections:
+                    bbox = detection.location_data.relative_bounding_box
+
+                    x = int(bbox.xmin * w)
+                    y = int(bbox.ymin * h)
+                    width = int(bbox.width * w)
+                    height = int(bbox.height * h)
+
+                    area = width * height
+                    if area > best_area:
+                        best_area = area
+                        best_box = (x, y, width, height)
+
+                x, y, width, height = best_box
+
+                # quadratische Box
+                center_x = x + width // 2
+                center_y = y + height // 2
+                square_size = max(width, height)
+
+                new_x = center_x - square_size // 2
+                new_y = center_y - square_size // 2
+
+                # Clamp auf Bildgrenzen
+                new_x = max(0, new_x)
+                new_y = max(0, new_y)
+
+                # Breite/Höhe so anpassen, dass die Box im Bild bleibt
+                square_size = min(square_size, w - new_x, h - new_y)
+
+                face_box_coor = [new_x, new_y, square_size, square_size]
+
+            else:
+                print("ERROR: No Face Detected (MediaPipe)")
+                face_box_coor = [0, 0, frame.shape[1], frame.shape[0]]
+
         elif "Y5F" in backend:
             # Use a YOLO5Face trained on WiderFace dataset
             # This utilizes both the CPU and GPU

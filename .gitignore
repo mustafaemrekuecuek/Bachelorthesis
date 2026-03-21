@@ -20,6 +20,11 @@ debug_utils_physnet.py
 test.yaml
 *.out
 venv
-
-!cache/
-!cache/**/*.npy
+cache
+.cache
+./cache
+*.npy
+data
+cache/
+cache/**/*.npy
+.DS_Store
