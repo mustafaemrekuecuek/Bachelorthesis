@@ -244,6 +244,17 @@ class BaseLoader(Dataset):
             config_preprocess.CROP_FACE.DETECTION.USE_MEDIAN_FACE_BOX,
             config_preprocess.RESIZE.W,
             config_preprocess.RESIZE.H)
+
+        """Self-Implemented"""
+
+        if hasattr(config_preprocess, "USE_MSR") and config_preprocess.USE_MSR:
+            frames = self.apply_msr_to_frames(
+            frames,
+            scales=config_preprocess.MSR.SCALES,
+            gain=config_preprocess.MSR.GAIN,
+            offset=config_preprocess.MSR.OFFSET
+            )
+
         # Check data transformation type
         data = list()  # Video data
         for data_type in config_preprocess.DATA_TYPE:
@@ -643,3 +654,58 @@ class BaseLoader(Dataset):
             np.linspace(
                 1, input_signal.shape[0], target_length), np.linspace(
                 1, input_signal.shape[0], input_signal.shape[0]), input_signal)
+
+
+    """Self-Implemented"""
+    @staticmethod
+    def single_scale_retinex(img, sigma):
+        img = img.astype(np.float32) + 1.0
+        blur = cv2.GaussianBlur(img, (0, 0), sigma)
+        blur = blur.astype(np.float32) + 1.0
+        retinex = np.log(img) - np.log(blur)
+        return retinex
+
+    @staticmethod
+    def multi_scale_retinex(img, scales):
+        retinex = np.zeros_like(img, dtype=np.float32)
+        for sigma in scales:
+            retinex += BaseLoader.single_scale_retinex(img, sigma)
+        retinex /= float(len(scales))
+        return retinex
+
+    @staticmethod
+    def apply_msr_to_frames(frames, scales=(15, 80, 250), gain=1.0, offset=0.0):
+        """
+        Apply Multi-Scale Retinex (MSR) to a sequence of frames.
+
+        Important design choices for rPPG:
+        - Avoid per-frame min-max normalization, because it destroys temporal consistency.
+        - Normalize globally over the full clip instead of each frame independently.
+        - Keep float32 output to preserve subtle temporal/color variations.
+        """
+        frames = frames.astype(np.float32)
+        output = np.zeros_like(frames, dtype=np.float32)
+
+        # Apply MSR frame by frame
+        for i in range(frames.shape[0]):
+            frame = frames[i] + 1.0  # avoid log(0)
+            msr = BaseLoader.multi_scale_retinex(frame, scales)
+            msr = gain * msr + offset
+            output[i] = msr
+
+        # Global normalization over the whole clip (NOT per frame)
+        out_min = np.min(output)
+        out_max = np.max(output)
+
+        if out_max - out_min > 1e-8:
+            output = (output - out_min) / (out_max - out_min)
+        else:
+            output = np.zeros_like(output, dtype=np.float32)
+
+        # Scale back to image-like range, but keep float32
+        output = output * 255.0
+
+        # Replace possible NaNs/Infs just to be safe
+        output = np.nan_to_num(output, nan=0.0, posinf=255.0, neginf=0.0)
+
+        return output.astype(np.float32)

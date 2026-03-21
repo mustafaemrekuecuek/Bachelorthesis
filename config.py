@@ -80,16 +80,13 @@ _C.TRAIN.DATA.PREPROCESS.CROP_FACE.DETECTION.USE_MEDIAN_FACE_BOX = False
 _C.TRAIN.DATA.PREPROCESS.RESIZE = CN()
 _C.TRAIN.DATA.PREPROCESS.RESIZE.W = 128
 _C.TRAIN.DATA.PREPROCESS.RESIZE.H = 128
-_C.TRAIN.DATA.PREPROCESS.BIGSMALL = CN()
-_C.TRAIN.DATA.PREPROCESS.BIGSMALL.BIG_DATA_TYPE = ['']
-_C.TRAIN.DATA.PREPROCESS.BIGSMALL.SMALL_DATA_TYPE = ['']
-_C.TRAIN.DATA.PREPROCESS.BIGSMALL.RESIZE = CN()
-_C.TRAIN.DATA.PREPROCESS.BIGSMALL.RESIZE.BIG_W = 144
-_C.TRAIN.DATA.PREPROCESS.BIGSMALL.RESIZE.BIG_H = 144
-_C.TRAIN.DATA.PREPROCESS.BIGSMALL.RESIZE.SMALL_W = 9
-_C.TRAIN.DATA.PREPROCESS.BIGSMALL.RESIZE.SMALL_H = 9
 _C.TRAIN.DATA.PREPROCESS.IBVP = CN()
 _C.TRAIN.DATA.PREPROCESS.IBVP.DATA_MODE = 'RGB'
+_C.TRAIN.DATA.PREPROCESS.USE_MSR = False
+_C.TRAIN.DATA.PREPROCESS.MSR = CN()
+_C.TRAIN.DATA.PREPROCESS.MSR.SCALES = [15, 80, 250]
+_C.TRAIN.DATA.PREPROCESS.MSR.GAIN = 1.0
+_C.TRAIN.DATA.PREPROCESS.MSR.OFFSET = 0.0
 
 
 # -----------------------------------------------------------------------------
@@ -145,17 +142,11 @@ _C.VALID.DATA.PREPROCESS.CROP_FACE.DETECTION.USE_MEDIAN_FACE_BOX = False
 _C.VALID.DATA.PREPROCESS.RESIZE = CN()
 _C.VALID.DATA.PREPROCESS.RESIZE.W = 128
 _C.VALID.DATA.PREPROCESS.RESIZE.H = 128
-_C.VALID.DATA.PREPROCESS.BIGSMALL = CN()
-_C.VALID.DATA.PREPROCESS.BIGSMALL.BIG_DATA_TYPE = ['']
-_C.VALID.DATA.PREPROCESS.BIGSMALL.SMALL_DATA_TYPE = ['']
-_C.VALID.DATA.PREPROCESS.BIGSMALL.RESIZE = CN()
-_C.VALID.DATA.PREPROCESS.BIGSMALL.RESIZE.BIG_W = 144
-_C.VALID.DATA.PREPROCESS.BIGSMALL.RESIZE.BIG_H = 144
-_C.VALID.DATA.PREPROCESS.BIGSMALL.RESIZE.SMALL_W = 9
-_C.VALID.DATA.PREPROCESS.BIGSMALL.RESIZE.SMALL_H = 9
-_C.VALID.DATA.PREPROCESS.IBVP = CN()
-_C.VALID.DATA.PREPROCESS.IBVP.DATA_MODE = 'RGB'
-
+_C.VALID.DATA.PREPROCESS.USE_MSR = False
+_C.VALID.DATA.PREPROCESS.MSR = CN()
+_C.VALID.DATA.PREPROCESS.MSR.SCALES = [15, 80, 250]
+_C.VALID.DATA.PREPROCESS.MSR.GAIN = 1.0
+_C.VALID.DATA.PREPROCESS.MSR.OFFSET = 0.0
 # -----------------------------------------------------------------------------
 # Test settings
 # -----------------------------------------------------------------------------\
@@ -212,16 +203,11 @@ _C.TEST.DATA.PREPROCESS.CROP_FACE.DETECTION.USE_MEDIAN_FACE_BOX = False
 _C.TEST.DATA.PREPROCESS.RESIZE = CN()
 _C.TEST.DATA.PREPROCESS.RESIZE.W = 128
 _C.TEST.DATA.PREPROCESS.RESIZE.H = 128
-_C.TEST.DATA.PREPROCESS.BIGSMALL = CN()
-_C.TEST.DATA.PREPROCESS.BIGSMALL.BIG_DATA_TYPE = ['']
-_C.TEST.DATA.PREPROCESS.BIGSMALL.SMALL_DATA_TYPE = ['']
-_C.TEST.DATA.PREPROCESS.BIGSMALL.RESIZE = CN()
-_C.TEST.DATA.PREPROCESS.BIGSMALL.RESIZE.BIG_W = 144
-_C.TEST.DATA.PREPROCESS.BIGSMALL.RESIZE.BIG_H = 144
-_C.TEST.DATA.PREPROCESS.BIGSMALL.RESIZE.SMALL_W = 9
-_C.TEST.DATA.PREPROCESS.BIGSMALL.RESIZE.SMALL_H = 9
-_C.TEST.DATA.PREPROCESS.IBVP = CN()
-_C.TEST.DATA.PREPROCESS.IBVP.DATA_MODE = 'RGB'
+_C.TEST.DATA.PREPROCESS.USE_MSR = False
+_C.TEST.DATA.PREPROCESS.MSR = CN()
+_C.TEST.DATA.PREPROCESS.MSR.SCALES = [15, 80, 250]
+_C.TEST.DATA.PREPROCESS.MSR.GAIN = 1.0
+_C.TEST.DATA.PREPROCESS.MSR.OFFSET = 0.0
 # -----------------------------------------------------------------------------
 # Unsupervised method settings
 # -----------------------------------------------------------------------------\
@@ -295,57 +281,6 @@ _C.MODEL.MODEL_DIR = 'PreTrainedModels'
 # Specific parameters for physnet parameters
 _C.MODEL.PHYSNET = CN()
 _C.MODEL.PHYSNET.FRAME_NUM = 64
-
-# -----------------------------------------------------------------------------
-# Specific parameters for iBVPNet parameters
-# -----------------------------------------------------------------------------
-_C.MODEL.iBVPNet = CN()
-_C.MODEL.iBVPNet.FRAME_NUM = 160
-_C.MODEL.iBVPNet.CHANNELS = 3
-# -----------------------------------------------------------------------------
-# Specific parameters for FactorizePhys parameters
-# -----------------------------------------------------------------------------
-_C.MODEL.FactorizePhys = CN()
-_C.MODEL.FactorizePhys.FRAME_NUM = 160
-_C.MODEL.FactorizePhys.CHANNELS = 3
-_C.MODEL.FactorizePhys.TYPE = "Standard"
-_C.MODEL.FactorizePhys.MD_FSAM = False
-_C.MODEL.FactorizePhys.MD_TYPE = 'NMF'
-_C.MODEL.FactorizePhys.MD_TRANSFORM = 'T_KAB'
-_C.MODEL.FactorizePhys.MD_R = 1
-_C.MODEL.FactorizePhys.MD_S = 1
-_C.MODEL.FactorizePhys.MD_STEPS = 4
-_C.MODEL.FactorizePhys.MD_INFERENCE = True
-_C.MODEL.FactorizePhys.MD_RESIDUAL = True
-
-# -----------------------------------------------------------------------------
-# Model Settings for TS-CAN
-# -----------------------------------------------------------------------------
-_C.MODEL.TSCAN = CN()
-_C.MODEL.TSCAN.FRAME_DEPTH = 10
-
-# -----------------------------------------------------------------------------
-# Model Settings for EfficientPhys
-# -----------------------------------------------------------------------------
-_C.MODEL.EFFICIENTPHYS = CN()
-_C.MODEL.EFFICIENTPHYS.FRAME_DEPTH = 10
-
-# -----------------------------------------------------------------------------
-# Model Settings for BigSmall
-# -----------------------------------------------------------------------------
-_C.MODEL.BIGSMALL = CN()
-_C.MODEL.BIGSMALL.FRAME_DEPTH = 3
-
-# -----------------------------------------------------------------------------
-# Model Settings for PhysFormer
-# -----------------------------------------------------------------------------
-_C.MODEL.PHYSFORMER = CN()
-_C.MODEL.PHYSFORMER.PATCH_SIZE = 4
-_C.MODEL.PHYSFORMER.DIM = 96
-_C.MODEL.PHYSFORMER.FF_DIM = 144
-_C.MODEL.PHYSFORMER.NUM_HEADS = 4
-_C.MODEL.PHYSFORMER.NUM_LAYERS = 12
-_C.MODEL.PHYSFORMER.THETA = 0.7
 
 # -----------------------------------------------------------------------------
 # Inference settings
