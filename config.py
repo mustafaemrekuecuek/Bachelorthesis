@@ -288,6 +288,16 @@ _C.MODEL.MODEL_DIR = 'PreTrainedModels'
 _C.MODEL.PHYSNET = CN()
 _C.MODEL.PHYSNET.FRAME_NUM = 64
 
+_C.MODEL.TDCM = CN()
+_C.MODEL.TDCM.ENABLE = False
+_C.MODEL.TDCM.CHANNELS = 128
+_C.MODEL.TDCM.DROPOUT = 0.1
+_C.MODEL.TDCM.KERNEL_SHORT = 3
+_C.MODEL.TDCM.KERNEL_MID = 5
+_C.MODEL.TDCM.KERNEL_LONG = 7
+_C.MODEL.TDCM.DILATION_MID = 2
+_C.MODEL.TDCM.DILATION_LONG = 3
+
 # -----------------------------------------------------------------------------
 # Inference settings
 # -----------------------------------------------------------------------------
