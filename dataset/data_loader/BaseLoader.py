@@ -452,7 +452,7 @@ class BaseLoader(Dataset):
                     face_region = face_region_all[reference_index]
                 frame = frame[max(face_region[1], 0):min(face_region[1] + face_region[3], frame.shape[0]),
                         max(face_region[0], 0):min(face_region[0] + face_region[2], frame.shape[1])]
-            resized_frames[i] = cv2.resize(frame, (width, height), interpolation=cv2.INTER_AREA)
+            resized_frames[i] = cv2.resize(frame, (width, height), interpolation=cv2.INTER_CUBIC)
         return resized_frames
 
     def chunk(self, frames, bvps, chunk_length):

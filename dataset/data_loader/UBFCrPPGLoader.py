@@ -7,6 +7,7 @@ S. Bobbia, R. Macwan, Y. Benezeth, A. Mansouri, J. Dubois, "Unsupervised skin ti
 import glob
 import os
 import re
+import random
 from multiprocessing import Pool, Process, Value, Array, Manager
 
 import cv2
@@ -44,6 +45,10 @@ class UBFCrPPGLoader(BaseLoader):
     def get_raw_data(self, data_path):
         """Returns data directories under the path(For UBFC-rPPG dataset)."""
         data_dirs = glob.glob(data_path + os.sep + "subject*")
+        data_dirs = sorted(
+            data_dirs,
+            key=lambda x: int(re.search(r"subject(\d+)", x).group(1))
+        )
         if not data_dirs:
             raise ValueError(self.dataset_name + " data paths empty!")
         dirs = [{"index": re.search(
@@ -51,18 +56,28 @@ class UBFCrPPGLoader(BaseLoader):
         return dirs
 
     def split_raw_data(self, data_dirs, begin, end):
-        """Returns a subset of data dirs, split with begin and end values."""
-        if begin == 0 and end == 1:  # return the full directory if begin == 0 and end == 1
+        """Returns a subject-independent subset of data dirs based on begin/end ratios."""
+        if begin == 0 and end == 1:
             return data_dirs
 
+        # Ensure stable numeric subject ordering first
+        data_dirs = sorted(
+            data_dirs,
+            key=lambda x: int(re.search(r"subject(\d+)", x["index"]).group(1))
+        )
+
+        rng = random.Random(42)
+        data_dirs = data_dirs.copy()
+        rng.shuffle(data_dirs)
+
         file_num = len(data_dirs)
-        choose_range = range(int(begin * file_num), int(end * file_num))
-        data_dirs_new = []
+        start = int(begin * file_num)
+        stop = int(end * file_num)
 
-        for i in choose_range:
-            data_dirs_new.append(data_dirs[i])
-
-        return data_dirs_new
+        selected = data_dirs[start:stop]
+        print(f"Split begin={begin}, end={end}, start={start}, stop={stop}, total_subjects={file_num}")
+        print("Selected subjects:", [x["index"] for x in selected])
+        return selected
 
     def preprocess_dataset_subprocess(self, data_dirs, config_preprocess, i, file_list_dict):
         """ invoked by preprocess_dataset for multi_process."""
@@ -73,21 +88,22 @@ class UBFCrPPGLoader(BaseLoader):
         if 'None' in config_preprocess.DATA_AUG:
             # Utilize dataset-specific function to read video
             frames = self.read_video(
-                os.path.join(data_dirs[i]['path'],"vid.avi"))
+                os.path.join(data_dirs[i]['path'], "vid.avi"))
         elif 'Motion' in config_preprocess.DATA_AUG:
             # Utilize general function to read video in .npy format
             frames = self.read_npy_video(
-                glob.glob(os.path.join(data_dirs[i]['path'],'*.npy')))
+                glob.glob(os.path.join(data_dirs[i]['path'], '*.npy')))
         else:
-            raise ValueError(f'Unsupported DATA_AUG specified for {self.dataset_name} dataset! Received {config_preprocess.DATA_AUG}.')
+            raise ValueError(
+                f'Unsupported DATA_AUG specified for {self.dataset_name} dataset! Received {config_preprocess.DATA_AUG}.')
 
         # Read Labels
         if config_preprocess.USE_PSUEDO_PPG_LABEL:
             bvps = self.generate_pos_psuedo_labels(frames, fs=self.config_data.FS)
         else:
             bvps = self.read_wave(
-                os.path.join(data_dirs[i]['path'],"ground_truth.txt"))
-            
+                os.path.join(data_dirs[i]['path'], "ground_truth.txt"))
+
         frames_clips, bvps_clips = self.preprocess(frames, bvps, config_preprocess)
         input_name_list, label_name_list = self.save_multi_process(frames_clips, bvps_clips, saved_filename)
         file_list_dict[i] = input_name_list
