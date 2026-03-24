@@ -76,7 +76,7 @@ VALID:
       LABEL_TYPE: DiffNormalized
 
       DO_CHUNK: True
-      CHUNK_LENGTH: 180
+      CHUNK_LENGTH: 300
 
       CROP_FACE:
         DO_CROP_FACE: True
@@ -121,7 +121,7 @@ TEST:
       LABEL_TYPE: DiffNormalized
 
       DO_CHUNK: True
-      CHUNK_LENGTH: 180
+      CHUNK_LENGTH: 300
 
       CROP_FACE:
         DO_CROP_FACE: True
