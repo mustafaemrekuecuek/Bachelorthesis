@@ -33,7 +33,7 @@ TRAIN:
       LABEL_TYPE: DiffNormalized
 
       DO_CHUNK: True
-      CHUNK_LENGTH: 180
+      CHUNK_LENGTH: 300
 
       CROP_FACE:
         DO_CROP_FACE: True
@@ -164,6 +164,6 @@ INFERENCE:
 
   EVALUATION_WINDOW:
     USE_SMALLER_WINDOW: False
-    WINDOW_SIZE: 10
+    WINDOW_SIZE: 30
 
   MODEL_PATH: ""
